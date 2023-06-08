@@ -1,35 +1,71 @@
 <template>
-    <TodoItem v-for="todo in todos" v-bind:key="todo.id" v-bind:todoProps="todo" />
+    <AddTodo 
+        @add-todo = "addTodo"    
+    />
+    <TodoItem 
+        v-for = "todo in todos" 
+        :key = "todo.id" 
+        :todoProps = "todo" 
+        @item-completed = "markComplete" 
+        @delete-item = "deleteTodo"
+    />
 </template>
 
 <script>
 
 import {ref} from "vue"
+// import {v4 as uuidv4} from "uuid"
+import axios from "axios"
 import TodoItem from "./TodoItem"
+import AddTodo from "./AddTodo"
 
 export default {
     name: "Top-Todos",
-    components: {TodoItem},
+    components: {TodoItem, AddTodo},
     setup() {
-        const todos = ref([
-            {
-                id: 1,
-                title: "Todo 1",
-                completed: true
-            },
-            {
-                id: 2,
-                title: "Todo 2",
-                completed: false
-            },
-            {
-                id: 3,
-                title: "Todo 3",
-                completed: false
+        const todos = ref([])
+        const getAllTodos = async () => {
+            try {
+                const res = await axios.get("https://jsonplaceholder.typicode.com/todos?_limit=5")
+                todos.value = res.data
+            } catch (error) {
+                console.log(error)
             }
-        ])
+        }
+
+        const markComplete = id => {
+            todos.value = todos.value.map(todo =>{
+                if(todo.id === id) todo.completed = !todo.completed
+                return todo
+            });
+        }
+
+        const deleteTodo = async id => {
+            try {
+                await axios.delete("https://jsonplaceholder.typicode.com/todos/${id}")
+                todos.value = todos.value.filter(todo => todo.id !== id)
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const addTodo = async newTodo => {
+            // todos.value.push(newTodo)
+            try {
+                const res = await axios.post("https://jsonplaceholder.typicode.com/todos/",newTodo);
+                todos.value.push(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        getAllTodos()
+
         return {
-            todos : todos
+            todos : todos,
+            markComplete,
+            deleteTodo,
+            addTodo,
         }
     }  
 }
@@ -38,5 +74,3 @@ export default {
 <style>
 
 </style>
-
-// 10m la trang thai ok -> tra ve 3 cai viec 1
