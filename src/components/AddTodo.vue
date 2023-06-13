@@ -6,30 +6,44 @@
 </template>
 
 <script>
-
-import { ref } from 'vue'
-// import {v4 as uuidv4} from 'uuid';
-
 export default {
     name: "AddTodo",
-    setup(props, context) {
-        const title = ref("")
-        const addItem = event => {
-            event.preventDefault();
-            const newItem = {
-                // id: uuidv4(),
-                title: title.value,
-                completed: false,
-            }
-
-            context.emit("add-todo", newItem)
-            title.value = ""
-        }
+    data() {
         return {
-            title,
-            addItem,
-        }
-    }
+            title: "",
+        };
+    },
+    methods: {
+    addItem(event) {
+        event.preventDefault();
+        const newItem = {
+            title: this.title,
+            completed: false,
+        };
+        this.$emit("add-todo", newItem);
+        this.title = "";
+    },
+
+    // beforCreate() {
+    //     console.log("Befor Create" + this.title);
+    // },
+    // created() {
+    //     console.log("Createdddd" + this.title);
+    // },
+    // beforMount() {
+    //     console.log("Befor Mount" + this.title);
+    // },
+    // mounted() {
+    //     console.log("Mounted" + this.title);
+    // },
+    // beforUnmounted(){
+    //     console.log("Befor Destroy" + this.title);
+    // },
+    // unmounted() {
+    //     console.log("Destroyed " + this.title);
+    // },
+
+    },
 }
 </script>
 

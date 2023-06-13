@@ -6,8 +6,9 @@
 
 <script>
 export default {
-    name : "Top-Header"
+    name : "Top-Header",
 }
+
 </script>
 
 <style scoped>

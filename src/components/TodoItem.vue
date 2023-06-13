@@ -13,21 +13,15 @@
 export default {
     name: "TodoItem",
     props: ["todoProps"],
-    setup(props, context) {
-        const markItemCompleted = () => {
-            console.log(props.todoProps);
-            context.emit("item-completed", props.todoProps.id)
-        }
-
-        const deleteItem = () => {
-            context.emit("delete-item", props.todoProps.id)
-        }
-
-        return {
-            markItemCompleted,
-            deleteItem
-        };
-    }
+    methods: {
+    markItemCompleted() {
+        console.log(this.todoProps);
+        this.$emit("item-completed", this.todoProps.id);
+    },
+    deleteItem() {
+        this.$emit("delete-item", this.todoProps.id);
+    },
+  },
 }
 </script>
 
